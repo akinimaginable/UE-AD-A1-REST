@@ -1,9 +1,5 @@
-
-
 from flask import Flask, request, jsonify, make_response
 import json
-import sys
-from werkzeug.exceptions import NotFound
 
 # Configuration de l'application Flask
 app = Flask(__name__)

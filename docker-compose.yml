@@ -1,7 +1,25 @@
 services:
+  booking:
+    build:
+      context: .
+      dockerfile: booking/Dockerfile
+    ports:
+      - "3100:3100"
   movie:
-    build: ./movie/
+    build:
+      context: .
+      dockerfile: movie/Dockerfile
     ports:
       - "3200:3200"
-  # to continue
-
+  schedule:
+    build:
+      context: .
+      dockerfile: schedule/Dockerfile
+    ports:
+      - "3300:3300"
+  user:
+    build:
+      context: .
+      dockerfile: user/Dockerfile
+    ports:
+      - "3400:3400"
