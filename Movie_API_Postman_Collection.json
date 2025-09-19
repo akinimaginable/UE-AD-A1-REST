@@ -1,0 +1,214 @@
+{
+	"info": {
+		"_postman_id": "movie-api-collection",
+		"name": "API Service Films",
+		"description": "Collection pour les endpoints de l'API Service Films",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Accueil",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						""
+					]
+				},
+				"description": "Message de bienvenue du service Films"
+			},
+			"response": []
+		},
+		{
+			"name": "Récupérer Tous les Films",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/json",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"json"
+					]
+				},
+				"description": "Récupérer tous les films de la base de données"
+			},
+			"response": []
+		},
+		{
+			"name": "Récupérer Film par Titre",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/moviesbytitle?title={{movie_title}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"moviesbytitle"
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "{{movie_title}}",
+							"description": "Titre du film à rechercher"
+						}
+					]
+				},
+				"description": "Récupérer un film par son titre"
+			},
+			"response": []
+		},
+		{
+			"name": "Récupérer Film par ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/movies/{{movie_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"movies",
+						"{{movie_id}}"
+					]
+				},
+				"description": "Récupérer un film par son ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Ajouter Nouveau Film",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{movie_id}}\",\n    \"title\": \"{{movie_title}}\",\n    \"rating\": \"{{movie_rating}}\",\n    \"director\": \"{{movie_director}}\",\n    \"release_date\": \"{{movie_release_date}}\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/movies/{{movie_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"movies",
+						"{{movie_id}}"
+					]
+				},
+				"description": "Ajouter un nouveau film à la base de données"
+			},
+			"response": []
+		},
+		{
+			"name": "Mettre à Jour Note du Film",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/movies/{{movie_id}}/{{new_rating}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"movies",
+						"{{movie_id}}",
+						"{{new_rating}}"
+					]
+				},
+				"description": "Mettre à jour la note d'un film par son ID"
+			},
+			"response": []
+		},
+		{
+			"name": "Supprimer Film",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/movies/{{movie_id}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"movies",
+						"{{movie_id}}"
+					]
+				},
+				"description": "Supprimer un film par son ID"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3200",
+			"type": "string"
+		},
+		{
+			"key": "movie_id",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "movie_title",
+			"value": "Inception",
+			"type": "string"
+		},
+		{
+			"key": "movie_rating",
+			"value": "8.8",
+			"type": "string"
+		},
+		{
+			"key": "movie_director",
+			"value": "Christopher Nolan",
+			"type": "string"
+		},
+		{
+			"key": "movie_release_date",
+			"value": "2010-07-16",
+			"type": "string"
+		},
+		{
+			"key": "new_rating",
+			"value": "9.0",
+			"type": "string"
+		}
+	]
+}
