@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "movie-api-collection",
-		"name": "API Service Films",
-		"description": "Collection pour les endpoints de l'API Service Films",
+		"_postman_id": "movie-booking-api-collection",
+		"name": "API Services Cinéma - Collection Complète",
+		"description": "Collection complète pour tous les microservices du système de cinéma : Movie, Schedule, Booking et User",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -294,6 +294,148 @@
 				"description": "Supprimer tous les horaires d'une date spécifique"
 			},
 			"response": []
+		},
+		{
+			"name": "Booking - Accueil",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{booking_base_url}}/",
+					"host": [
+						"{{booking_base_url}}"
+					],
+					"path": [
+						""
+					]
+				},
+				"description": "Message de bienvenue du service Booking"
+			},
+			"response": []
+		},
+		{
+			"name": "Booking - Récupérer Toutes les Réservations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{booking_base_url}}/bookings",
+					"host": [
+						"{{booking_base_url}}"
+					],
+					"path": [
+						"bookings"
+					]
+				},
+				"description": "Récupérer toutes les réservations"
+			},
+			"response": []
+		},
+		{
+			"name": "Booking - Récupérer Réservations Utilisateur",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{booking_base_url}}/bookings/{{user_id}}",
+					"host": [
+						"{{booking_base_url}}"
+					],
+					"path": [
+						"bookings",
+						"{{user_id}}"
+					]
+				},
+				"description": "Récupérer les réservations d'un utilisateur spécifique"
+			},
+			"response": []
+		},
+		{
+			"name": "Booking - Récupérer Réservations Détaillées",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{booking_base_url}}/bookings/{{user_id}}/detailed",
+					"host": [
+						"{{booking_base_url}}"
+					],
+					"path": [
+						"bookings",
+						"{{user_id}}",
+						"detailed"
+					]
+				},
+				"description": "Récupérer les réservations détaillées avec informations des films et horaires"
+			},
+			"response": []
+		},
+		{
+			"name": "Booking - Créer Nouvelle Réservation",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userid\": \"{{user_id}}\",\n    \"movieid\": \"{{movie_id}}\",\n    \"date\": \"{{schedule_date}}\"\n}"
+				},
+				"url": {
+					"raw": "{{booking_base_url}}/bookings",
+					"host": [
+						"{{booking_base_url}}"
+					],
+					"path": [
+						"bookings"
+					]
+				},
+				"description": "Créer une nouvelle réservation pour un utilisateur"
+			},
+			"response": []
+		},
+		{
+			"name": "Booking - Supprimer Réservation Spécifique",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{booking_base_url}}/bookings/{{user_id}}/{{movie_id}}/{{schedule_date}}",
+					"host": [
+						"{{booking_base_url}}"
+					],
+					"path": [
+						"bookings",
+						"{{user_id}}",
+						"{{movie_id}}",
+						"{{schedule_date}}"
+					]
+				},
+				"description": "Supprimer une réservation spécifique"
+			},
+			"response": []
+		},
+		{
+			"name": "Booking - Supprimer Toutes les Réservations Utilisateur",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{booking_base_url}}/bookings/{{user_id}}",
+					"host": [
+						"{{booking_base_url}}"
+					],
+					"path": [
+						"bookings",
+						"{{user_id}}"
+					]
+				},
+				"description": "Supprimer toutes les réservations d'un utilisateur"
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -365,6 +507,16 @@
 		{
 			"key": "schedule_time",
 			"value": "20:00",
+			"type": "string"
+		},
+		{
+			"key": "booking_base_url",
+			"value": "http://localhost:3201",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "chris_rivers",
 			"type": "string"
 		}
 	]
