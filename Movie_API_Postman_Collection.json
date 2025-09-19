@@ -152,6 +152,148 @@
 				"description": "Supprimer un film par son ID"
 			},
 			"response": []
+		},
+		{
+			"name": "Schedule - Accueil",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{schedule_base_url}}/",
+					"host": [
+						"{{schedule_base_url}}"
+					],
+					"path": [
+						""
+					]
+				},
+				"description": "Message de bienvenue du service Schedule"
+			},
+			"response": []
+		},
+		{
+			"name": "Schedule - Récupérer Tous les Horaires",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{schedule_base_url}}/schedule",
+					"host": [
+						"{{schedule_base_url}}"
+					],
+					"path": [
+						"schedule"
+					]
+				},
+				"description": "Récupérer tous les horaires de la base de données"
+			},
+			"response": []
+		},
+		{
+			"name": "Schedule - Récupérer Horaires par Date",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{schedule_base_url}}/schedule/{{schedule_date}}",
+					"host": [
+						"{{schedule_base_url}}"
+					],
+					"path": [
+						"schedule",
+						"{{schedule_date}}"
+					]
+				},
+				"description": "Récupérer les horaires pour une date spécifique"
+			},
+			"response": []
+		},
+		{
+			"name": "Schedule - Récupérer Horaires par Film",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{schedule_base_url}}/schedule/movie/{{movie_id}}",
+					"host": [
+						"{{schedule_base_url}}"
+					],
+					"path": [
+						"schedule",
+						"movie",
+						"{{movie_id}}"
+					]
+				},
+				"description": "Récupérer tous les horaires d'un film spécifique"
+			},
+			"response": []
+		},
+		{
+			"name": "Schedule - Ajouter Film à l'Horaire",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"movieid\": \"{{movie_id}}\",\n    \"date\": \"{{schedule_date}}\",\n    \"time\": \"{{schedule_time}}\"\n}"
+				},
+				"url": {
+					"raw": "{{schedule_base_url}}/schedule",
+					"host": [
+						"{{schedule_base_url}}"
+					],
+					"path": [
+						"schedule"
+					]
+				},
+				"description": "Ajouter un film à l'horaire"
+			},
+			"response": []
+		},
+		{
+			"name": "Schedule - Supprimer Horaire Spécifique",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{schedule_base_url}}/schedule/{{movie_id}}/{{schedule_date}}",
+					"host": [
+						"{{schedule_base_url}}"
+					],
+					"path": [
+						"schedule",
+						"{{movie_id}}",
+						"{{schedule_date}}"
+					]
+				},
+				"description": "Supprimer un horaire spécifique pour un film et une date"
+			},
+			"response": []
+		},
+		{
+			"name": "Schedule - Supprimer Tous les Horaires d'une Date",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{schedule_base_url}}/schedule/date/{{schedule_date}}",
+					"host": [
+						"{{schedule_base_url}}"
+					],
+					"path": [
+						"schedule",
+						"date",
+						"{{schedule_date}}"
+					]
+				},
+				"description": "Supprimer tous les horaires d'une date spécifique"
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -208,6 +350,21 @@
 		{
 			"key": "new_rating",
 			"value": "9.0",
+			"type": "string"
+		},
+		{
+			"key": "schedule_base_url",
+			"value": "http://localhost:3202",
+			"type": "string"
+		},
+		{
+			"key": "schedule_date",
+			"value": "20241215",
+			"type": "string"
+		},
+		{
+			"key": "schedule_time",
+			"value": "20:00",
 			"type": "string"
 		}
 	]
