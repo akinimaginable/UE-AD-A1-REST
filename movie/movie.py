@@ -21,7 +21,7 @@ def write(movies):
 # root message
 @app.route("/", methods=['GET'])
 def home():
-    return make_response("<h1 style='color:blue'>Welcome to the Movie service!</h1>",200)
+    return make_response("<h1 style='color:blue'>Bienvenue dans le service Films!</h1>",200)
 
 # Recupérer la base de donnée
 @app.route("/json", methods=['GET'])
@@ -40,7 +40,7 @@ def get_movie_bytitle():
                 json = movie
 
     if not json:
-        res = make_response(jsonify({"error":"movie title not found"}),500)
+        res = make_response(jsonify({"error":"Titre de film non trouvé"}),500)
     else:
         res = make_response(jsonify(json),200)
     return res
@@ -54,11 +54,11 @@ def add_movie(movieid):
         if str(movie["id"]) == str(movieid):
             print(movie["id"])
             print(movieid)
-            return make_response(jsonify({"error":"movie ID already exists"}),500)
+            return make_response(jsonify({"error":"Film ID déjà existant"}),500)
 
     movies.append(req)
     write(movies)
-    res = make_response(jsonify({"message":"movie added"}),200)
+    res = make_response(jsonify({"message":"Film ajouté"}),200)
     return res
 
 # Mettre à jour la note d'un film
@@ -71,7 +71,7 @@ def update_movie_rating(movieid, rate):
             write(movies)
             return res
 
-    res = make_response(jsonify({"error":"movie ID not found"}),500)
+    res = make_response(jsonify({"error":"Film ID non trouvé"}),500)
     return res
 
 # Supprimer un film
@@ -83,7 +83,7 @@ def del_movie(movieid):
             write(movies)
             return make_response(jsonify(movie),200)
 
-    res = make_response(jsonify({"error":"movie ID not found"}),500)
+    res = make_response(jsonify({"error":"Film ID non trouvé"}),500)
     return res
 
 # Recupérer un film par son id
@@ -93,6 +93,6 @@ def get_movie_byid(movieid):
         if str(movie["id"]) == str(movieid):
             res = make_response(jsonify(movie),200)
             return res
-    return make_response(jsonify({"error":"Movie ID not found"}),500)
+    return make_response(jsonify({"error":"Film ID non trouvé"}),500)
 if __name__ == "__main__":
     app.run(host=HOST, port=PORT)
