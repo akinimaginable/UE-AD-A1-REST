@@ -22,6 +22,7 @@ def write_movies_to_file(movies_data):
 # ROUTES DE L'API
 # ============================================================================
 
+# Route pour l'accueil du service Movie
 @app.route("/", methods=['GET'])
 def home():
     # Page d'accueil du service Movie
@@ -31,11 +32,13 @@ def home():
 # OPÉRATIONS CRUD - READ
 # ============================================================================
 
+# Route pour récupérer tous les films
 @app.route("/json", methods=['GET'])
 def get_all_movies():
     # Récupérer tous les films
     return make_response(jsonify(movies), 200)
 
+# Route pour récupérer un film par son titre
 @app.route("/moviesbytitle", methods=['GET'])
 def get_movie_by_title():
     # Récupérer un film par son titre
@@ -51,6 +54,7 @@ def get_movie_by_title():
     
     return make_response(jsonify({"error": "Titre de film non trouvé"}), 404)
 
+# Route pour récupérer un film par son ID
 @app.route("/movies/<movieid>", methods=['GET'])
 def get_movie_by_id(movieid):
     # Récupérer un film par son ID
@@ -64,6 +68,7 @@ def get_movie_by_id(movieid):
 # OPÉRATIONS CRUD - CREATE
 # ============================================================================
 
+# Route pour ajouter un film
 @app.route("/movies/<movieid>", methods=['POST'])
 def add_movie(movieid):
     # Ajouter un nouveau film
@@ -90,6 +95,7 @@ def add_movie(movieid):
 # OPÉRATIONS CRUD - UPDATE
 # ============================================================================
 
+# Route pour mettre à jour la note d'un film
 @app.route("/movies/<movieid>/<rate>", methods=['PUT'])
 def update_movie_rating(movieid, rate):
     # Mettre à jour la note d'un film
@@ -108,6 +114,7 @@ def update_movie_rating(movieid, rate):
 # OPÉRATIONS CRUD - DELETE
 # ============================================================================
 
+# Route pour supprimer un film
 @app.route("/movies/<movieid>", methods=['DELETE'])
 def delete_movie(movieid):
     # Supprimer un film

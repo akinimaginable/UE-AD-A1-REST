@@ -10,6 +10,7 @@ HOST = '0.0.0.0'
 with open('{}/databases/times.json'.format("."), "r") as jsf:
    schedule = json.load(jsf)["schedule"]
 
+# Fonction pour sauvegarder les données d'horaires dans le fichier JSON
 def write_schedule_to_file(data):
     # Sauvegarde les données d'horaires dans le fichier JSON
     with open('{}/databases/times.json'.format("."), "w") as jsf:
@@ -19,6 +20,7 @@ def write_schedule_to_file(data):
 # ROUTES DE L'API
 # ============================================================================
 
+# Route pour l'accueil du service Schedule
 @app.route("/", methods=['GET'])
 def home():
     # Page d'accueil du service Schedule
@@ -28,6 +30,7 @@ def home():
 # OPÉRATIONS CRUD - CREATE
 # ============================================================================
 
+# Route pour ajouter un film à l'horaire
 @app.route("/schedule", methods=['POST'])
 def add_movie_to_schedule():
     # Ajouter un film à l'horaire
@@ -62,6 +65,7 @@ def get_all_schedules():
     # Récupérer tous les horaires
     return make_response(jsonify(schedule), 200)
 
+# Route pour récupérer les horaires pour une date spécifique
 @app.route("/schedule/<date>", methods=['GET'])
 def get_schedule_by_date(date):
     # Récupérer les horaires pour une date spécifique
@@ -72,6 +76,7 @@ def get_schedule_by_date(date):
     else:
         return make_response(jsonify({"error": "Aucun horaire trouvé pour cette date"}), 404)
 
+# Route pour récupérer les horaires pour un film spécifique
 @app.route("/schedule/movie/<movieid>", methods=['GET'])
 def get_schedule_by_movie(movieid):
     # Récupérer tous les horaires d'un film spécifique
@@ -87,6 +92,7 @@ def get_schedule_by_movie(movieid):
 # OPÉRATIONS CRUD - DELETE
 # ============================================================================
 
+# Route pour supprimer un horaire spécifique (film + date)
 @app.route("/schedule/<movieid>/<date>", methods=['DELETE'])
 def delete_schedule(movieid, date):
     # Supprimer un horaire spécifique (film + date)
@@ -104,6 +110,7 @@ def delete_schedule(movieid, date):
     else:
         return make_response(jsonify({"error": "Horaire non trouvé"}), 404)
 
+# Route pour supprimer tous les horaires d'une date spécifique
 @app.route("/schedule/date/<date>", methods=['DELETE'])
 def delete_all_schedules_for_date(date):
     # Supprimer tous les horaires d'une date

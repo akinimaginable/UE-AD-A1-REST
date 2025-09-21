@@ -57,6 +57,7 @@ def home():
 # OPÉRATIONS CRUD - CREATE
 # ============================================================================
 
+# Route pour créer une nouvelle réservation
 @app.route("/bookings", methods=['POST'])
 def create_booking():
     # Créer une nouvelle réservation
@@ -123,11 +124,13 @@ def create_booking():
 # OPÉRATIONS CRUD - READ
 # ============================================================================
 
+# Route pour récupérer toutes les réservations
 @app.route("/bookings", methods=['GET'])
 def get_all_bookings():
     # Récupérer toutes les réservations (accès admin)
     return make_response(jsonify(bookings), 200)
 
+# Route pour récupérer toutes les réservations d'un utilisateur
 @app.route("/bookings/<userid>", methods=['GET'])
 def get_user_bookings(userid):
     # Récupérer toutes les réservations d'un utilisateur
@@ -142,6 +145,7 @@ def get_user_bookings(userid):
     
     return make_response(jsonify(user_booking), 200)
 
+# Route pour récupérer les réservations détaillées d'un utilisateur
 @app.route("/bookings/<userid>/detailed", methods=['GET'])
 def get_detailed_user_bookings(userid):
     # Récupérer les réservations détaillées d'un utilisateur avec informations des films et horaires
@@ -185,6 +189,7 @@ def get_detailed_user_bookings(userid):
 # OPÉRATIONS CRUD - DELETE
 # ============================================================================
 
+# Route pour supprimer une réservation spécifique
 @app.route("/bookings/<userid>/<movieid>/<date>", methods=['DELETE'])
 def delete_booking(userid, movieid, date):
     # Supprimer une réservation spécifique
@@ -210,6 +215,7 @@ def delete_booking(userid, movieid, date):
     
     return make_response(jsonify({"error": "Réservation non trouvée"}), 404)
 
+# Route pour supprimer toutes les réservations d'un utilisateur
 @app.route("/bookings/<userid>", methods=['DELETE'])
 def delete_all_user_bookings(userid):
     # Supprimer toutes les réservations d'un utilisateur
