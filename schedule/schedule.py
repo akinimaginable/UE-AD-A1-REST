@@ -87,6 +87,22 @@ def get_schedule_by_movie(movieid):
     else:
         return make_response(jsonify({"error": "Aucun horaire trouvé pour ce film"}), 404)
 
+# Route pour vérifier si un film est programmé à une date spécifique (utilisée par Booking)
+@app.route("/schedule/<movieid>/<date>", methods=['GET'])
+def check_movie_schedule(movieid, date):
+    # Vérifie si un film est programmé à une date spécifique
+    for item in schedule:
+        if item.get('date') == date:
+            movies = item.get('movies', [])
+            if movieid in movies:
+                return make_response(jsonify({
+                    "date": date,
+                    "movieid": movieid,
+                    "available": True
+                }), 200)
+    
+    return make_response(jsonify({"error": "Film non programmé à cette date"}), 404)
+
 
 # ============================================================================
 # OPÉRATIONS CRUD - DELETE

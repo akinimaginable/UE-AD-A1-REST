@@ -10,6 +10,11 @@ with open('{}/databases/users.json'.format("."), "r") as jsf:
     users = json.load(jsf)["users"]
 
 
+def write_users_to_file(data):
+    with open('{}/databases/users.json'.format("."), "w") as jsf:
+        json.dump({"users": data}, jsf, indent=4)
+
+
 @app.route("/", methods=['GET'])
 def home():
     return "<h1 style='color:blue'>Welcome to the User service!</h1>"
@@ -30,8 +35,8 @@ def get_user_by_id(userid):
 
 
 @app.route("/users/admin", methods=['GET'])
-def get_users():
-    admins = [user for user in users if user.get("type") == "admin"]
+def get_admin_users():
+    admins = [user for user in users if user.get("role") == "admin"]
     if len(admins) == 0:
         return make_response(jsonify({"error": "No admin users found"}), 204)
 
@@ -47,6 +52,7 @@ def add_user():
             return make_response(jsonify({"error": "User ID already exists"}), 400)
 
     users.append(req)
+    write_users_to_file(users)
     return make_response(jsonify(req), 201)
 
 
@@ -58,6 +64,7 @@ def update_user(userid):
         return make_response(jsonify({"error": "User ID not found"}), 404)
 
     user.update(req)
+    write_users_to_file(users)
     return make_response(jsonify(user), 200)
 
 
@@ -68,6 +75,7 @@ def delete_user(userid):
         return make_response(jsonify({"error": "User ID not found"}), 404)
 
     users.remove(user)
+    write_users_to_file(users)
     return make_response(jsonify({"message": "User deleted successfully"}), 200)
 
 

@@ -10,6 +10,7 @@ HOST = '0.0.0.0'
 # URLs des autres services microservices
 MOVIE_SERVICE_URL = "http://localhost:3200"
 SCHEDULE_SERVICE_URL = "http://localhost:3202"
+USER_SERVICE_URL = "http://localhost:3203"
 
 # Chargement de la base de données des réservations au démarrage
 with open('{}/databases/bookings.json'.format("."), "r") as jsf:
@@ -43,6 +44,23 @@ def get_schedule_details(movie_id, date):
         return None
     except requests.RequestException:
         return None
+
+def get_user_details(userid):
+    # Récupère les détails d'un utilisateur depuis le service User
+    try:
+        response = requests.get(f"{USER_SERVICE_URL}/users/{userid}")
+        if response.status_code == 200:
+            return response.json()
+        return None
+    except requests.RequestException:
+        return None
+
+def is_admin_user(userid):
+    # Vérifie si l'utilisateur est un administrateur
+    user_details = get_user_details(userid)
+    if user_details and user_details.get('role') == 'admin':
+        return True
+    return False
 
 # ============================================================================
 # ROUTES DE L'API
@@ -127,7 +145,16 @@ def create_booking():
 # Route pour récupérer toutes les réservations
 @app.route("/bookings", methods=['GET'])
 def get_all_bookings():
-    # Récupérer toutes les réservations (accès admin)
+    # Récupérer toutes les réservations (accès admin uniquement)
+    # Vérification de l'autorisation admin via paramètre userid
+    userid = request.args.get('userid')
+    
+    if not userid:
+        return make_response(jsonify({"error": "userid requis pour accéder aux réservations"}), 400)
+    
+    if not is_admin_user(userid):
+        return make_response(jsonify({"error": "Accès refusé - droits administrateur requis"}), 403)
+    
     return make_response(jsonify(bookings), 200)
 
 # Route pour récupérer toutes les réservations d'un utilisateur

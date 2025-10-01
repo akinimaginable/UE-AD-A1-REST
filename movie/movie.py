@@ -30,10 +30,10 @@ def check_admin(author) -> bool:
         return is_admin_cache[author]
 
     try:
-        resp = requests.get(f"http://localhost:3100/users/{author}")
+        resp = requests.get(f"http://localhost:3203/users/{author}")
         if resp.status_code == 200:
             data = resp.json()
-            is_admin = data.get("type", "") == "admin"
+            is_admin = data.get("role", "") == "admin"
             is_admin_cache[author] = is_admin
             return is_admin
         else:

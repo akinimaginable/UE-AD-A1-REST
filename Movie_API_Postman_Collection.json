@@ -314,7 +314,57 @@
 			"response": []
 		},
 		{
-			"name": "Booking - Récupérer Toutes les Réservations",
+			"name": "Booking - Récupérer Toutes les Réservations (Admin)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{booking_base_url}}/bookings?userid={{admin_user_id}}",
+					"host": [
+						"{{booking_base_url}}"
+					],
+					"path": [
+						"bookings"
+					],
+					"query": [
+						{
+							"key": "userid",
+							"value": "{{admin_user_id}}",
+							"description": "ID de l'utilisateur admin pour autoriser l'accès"
+						}
+					]
+				},
+				"description": "Récupérer toutes les réservations (accès admin uniquement)"
+			},
+			"response": []
+		},
+		{
+			"name": "Booking - Récupérer Toutes les Réservations (Non-Admin - Devrait Échouer)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{booking_base_url}}/bookings?userid={{regular_user_id}}",
+					"host": [
+						"{{booking_base_url}}"
+					],
+					"path": [
+						"bookings"
+					],
+					"query": [
+						{
+							"key": "userid",
+							"value": "{{regular_user_id}}",
+							"description": "ID d'un utilisateur non-admin (devrait retourner 403)"
+						}
+					]
+				},
+				"description": "Test d'accès refusé pour utilisateur non-admin (devrait retourner 403)"
+			},
+			"response": []
+		},
+		{
+			"name": "Booking - Récupérer Toutes les Réservations (Sans UserID - Devrait Échouer)",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -327,7 +377,7 @@
 						"bookings"
 					]
 				},
-				"description": "Récupérer toutes les réservations"
+				"description": "Test sans userid (devrait retourner 400)"
 			},
 			"response": []
 		},
@@ -436,6 +486,154 @@
 				"description": "Supprimer toutes les réservations d'un utilisateur"
 			},
 			"response": []
+		},
+		{
+			"name": "User - Accueil",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{user_service_base_url}}/",
+					"host": [
+						"{{user_service_base_url}}"
+					],
+					"path": [
+						""
+					]
+				},
+				"description": "Message de bienvenue du service User"
+			},
+			"response": []
+		},
+		{
+			"name": "User - Récupérer Tous les Utilisateurs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{user_service_base_url}}/users",
+					"host": [
+						"{{user_service_base_url}}"
+					],
+					"path": [
+						"users"
+					]
+				},
+				"description": "Récupérer tous les utilisateurs"
+			},
+			"response": []
+		},
+		{
+			"name": "User - Récupérer Utilisateur par ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{user_service_base_url}}/users/{{user_id}}",
+					"host": [
+						"{{user_service_base_url}}"
+					],
+					"path": [
+						"users",
+						"{{user_id}}"
+					]
+				},
+				"description": "Récupérer un utilisateur par son ID"
+			},
+			"response": []
+		},
+		{
+			"name": "User - Récupérer Utilisateurs Admin",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{user_service_base_url}}/users/admin",
+					"host": [
+						"{{user_service_base_url}}"
+					],
+					"path": [
+						"users",
+						"admin"
+					]
+				},
+				"description": "Récupérer tous les utilisateurs administrateurs"
+			},
+			"response": []
+		},
+		{
+			"name": "User - Ajouter Nouvel Utilisateur",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"new_user_test\",\n    \"name\": \"Test User\",\n    \"role\": \"user\",\n    \"last_active\": 1640995200\n}"
+				},
+				"url": {
+					"raw": "{{user_service_base_url}}/users",
+					"host": [
+						"{{user_service_base_url}}"
+					],
+					"path": [
+						"users"
+					]
+				},
+				"description": "Ajouter un nouvel utilisateur"
+			},
+			"response": []
+		},
+		{
+			"name": "User - Mettre à Jour Utilisateur",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Updated Test User\",\n    \"role\": \"admin\",\n    \"last_active\": 1640995300\n}"
+				},
+				"url": {
+					"raw": "{{user_service_base_url}}/users/new_user_test",
+					"host": [
+						"{{user_service_base_url}}"
+					],
+					"path": [
+						"users",
+						"new_user_test"
+					]
+				},
+				"description": "Mettre à jour un utilisateur existant"
+			},
+			"response": []
+		},
+		{
+			"name": "User - Supprimer Utilisateur",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{user_service_base_url}}/users/new_user_test",
+					"host": [
+						"{{user_service_base_url}}"
+					],
+					"path": [
+						"users",
+						"new_user_test"
+					]
+				},
+				"description": "Supprimer un utilisateur"
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -517,6 +715,21 @@
 		{
 			"key": "user_id",
 			"value": "chris_rivers",
+			"type": "string"
+		},
+		{
+			"key": "admin_user_id",
+			"value": "chris_rivers",
+			"type": "string"
+		},
+		{
+			"key": "regular_user_id",
+			"value": "garret_heaton",
+			"type": "string"
+		},
+		{
+			"key": "user_service_base_url",
+			"value": "http://localhost:3203",
 			"type": "string"
 		}
 	]
