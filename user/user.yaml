@@ -1,34 +1,36 @@
 openapi: 3.1.1
 
 info:
-  title: User API
-  summary: This is the API of the User service
+  title: API Utilisateurs
+  summary: API du service de gestion des utilisateurs
   description: |
-    This API manages users and their authentication information. It provides endpoints 
-    to create, read, update and delete users, as well as check for admin privileges.
-    This service is used by other microservices to verify user roles and permissions.
+    Cette API gère les utilisateurs et leurs informations d'authentification. Elle fournit 
+    des endpoints pour créer, lire, mettre à jour et supprimer des utilisateurs, ainsi que 
+    pour vérifier les privilèges administrateurs. Ce service est utilisé par les autres 
+    microservices pour vérifier les rôles et permissions des utilisateurs.
   contact:
-    name: Cinema Management System
-    email: support@cinema.fr
+    name: Clovis SFEIR 
+    url: https://etrange.org/
+    email: clovis.sfeir@imt-atlantique.net
   version: 1.0.0
 
 tags:
-  - name: users
-    description: Operations related to user management
+  - name: utilisateurs
+    description: Opérations liées à la gestion des utilisateurs
   - name: admins
-    description: Operations to retrieve admin users
+    description: Opérations pour récupérer les utilisateurs administrateurs
 
 paths:
   /:
     get:
       tags:
-        - users
-      summary: home page of the service
+        - utilisateurs
+      summary: page d'accueil du service
       operationId: home
-      description: Welcome page for the User service
+      description: Page de bienvenue du service Utilisateurs
       responses:
         '200':
-          description: welcome message
+          description: message de bienvenue
           content:
             text/html:
               schema:
@@ -38,13 +40,13 @@ paths:
   /users:
     get:
       tags:
-        - users
-      summary: get all users
+        - utilisateurs
+      summary: obtenir tous les utilisateurs
       operationId: get_all_users
-      description: Retrieve the complete list of users in the system
+      description: Récupère la liste complète des utilisateurs du système
       responses:
         '200':
-          description: list of all users
+          description: liste de tous les utilisateurs
           content:
             application/json:
               schema:
@@ -54,12 +56,12 @@ paths:
     
     post:
       tags:
-        - users
-      summary: create a new user
+        - utilisateurs
+      summary: créer un nouvel utilisateur
       operationId: create_user
-      description: Add a new user to the system
+      description: Ajoute un nouvel utilisateur au système
       requestBody:
-        description: User object to create
+        description: Objet utilisateur à créer
         required: true
         content:
           application/json:
@@ -67,13 +69,13 @@ paths:
               $ref: '#/components/schemas/UserItem'
       responses:
         '201':
-          description: user created successfully
+          description: utilisateur créé avec succès
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserItem'
         '400':
-          description: user ID already exists
+          description: l'ID utilisateur existe déjà
           content:
             application/json:
               schema:
@@ -82,27 +84,27 @@ paths:
   /users/{userid}:
     get:
       tags:
-        - users
-      summary: get user by ID
+        - utilisateurs
+      summary: obtenir un utilisateur par son ID
       operationId: get_user_by_id
-      description: Retrieve a specific user by their user ID
+      description: Récupère un utilisateur spécifique via son ID
       parameters:
         - name: userid
           in: path
           required: true
-          description: User ID
+          description: ID de l'utilisateur
           schema:
             type: string
             example: chris_rivers
       responses:
         '200':
-          description: user found
+          description: utilisateur trouvé
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserItem'
         '404':
-          description: user not found
+          description: utilisateur non trouvé
           content:
             application/json:
               schema:
@@ -110,20 +112,20 @@ paths:
     
     put:
       tags:
-        - users
-      summary: update a user
+        - utilisateurs
+      summary: mettre à jour un utilisateur
       operationId: update_user
-      description: Update an existing user's information
+      description: Met à jour les informations d'un utilisateur existant
       parameters:
         - name: userid
           in: path
           required: true
-          description: User ID
+          description: ID de l'utilisateur
           schema:
             type: string
             example: chris_rivers
       requestBody:
-        description: Updated user information
+        description: Informations utilisateur mises à jour
         required: true
         content:
           application/json:
@@ -131,13 +133,13 @@ paths:
               $ref: '#/components/schemas/UserItem'
       responses:
         '200':
-          description: user updated successfully
+          description: utilisateur mis à jour avec succès
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserItem'
         '404':
-          description: user not found
+          description: utilisateur non trouvé
           content:
             application/json:
               schema:
@@ -145,21 +147,21 @@ paths:
     
     delete:
       tags:
-        - users
-      summary: delete a user
+        - utilisateurs
+      summary: supprimer un utilisateur
       operationId: delete_user
-      description: Remove a user from the system
+      description: Supprime un utilisateur du système
       parameters:
         - name: userid
           in: path
           required: true
-          description: User ID
+          description: ID de l'utilisateur
           schema:
             type: string
             example: chris_rivers
       responses:
         '200':
-          description: user deleted successfully
+          description: utilisateur supprimé avec succès
           content:
             application/json:
               schema:
@@ -169,7 +171,7 @@ paths:
                     type: string
                     example: User deleted successfully
         '404':
-          description: user not found
+          description: utilisateur non trouvé
           content:
             application/json:
               schema:
@@ -179,12 +181,12 @@ paths:
     get:
       tags:
         - admins
-      summary: get all admin users
+      summary: obtenir tous les utilisateurs administrateurs
       operationId: get_admin_users
-      description: Retrieve the list of users with admin role
+      description: Récupère la liste des utilisateurs ayant le rôle administrateur
       responses:
         '200':
-          description: list of admin users
+          description: liste des utilisateurs administrateurs
           content:
             application/json:
               schema:
@@ -192,7 +194,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/UserItem'
         '204':
-          description: no admin users found
+          description: aucun utilisateur administrateur trouvé
           content:
             application/json:
               schema:
@@ -220,7 +222,7 @@ components:
         last_active:
           type: integer
           example: 1360031010
-          description: Unix timestamp of last activity
+          description: Timestamp Unix de la dernière activité
     
     Error:
       type: object
@@ -228,4 +230,3 @@ components:
         error:
           type: string
           example: User ID not found
-

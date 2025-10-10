@@ -1,33 +1,34 @@
 openapi: 3.1.1
 
 info:
-  title: Schedule API
-  summary: This is the API of the Schedule service
+  title: API Horaires
+  summary: API du service de gestion des horaires
   description: |
-    This API manages the movie schedule for the cinema. It provides endpoints to create, 
-    read and delete schedule entries. Each schedule entry associates a date with a list 
-    of movies playing on that date. This service is used by the Booking service to validate 
-    that movies are available on requested dates.
+    Cette API gère la programmation des films du cinéma. Elle fournit des endpoints pour créer, 
+    lire et supprimer des entrées d'horaires. Chaque entrée d'horaire associe une date avec une liste 
+    de films diffusés à cette date. Ce service est utilisé par le service Booking pour valider 
+    que les films sont disponibles aux dates demandées.
   contact:
-    name: Cinema Management System
-    email: support@cinema.fr
+    name: Clovis SFEIR 
+    url: https://etrange.org/
+    email: clovis.sfeir@imt-atlantique.net
   version: 1.0.0
 
 tags:
-  - name: schedules
-    description: Operations related to movie schedules
+  - name: horaires
+    description: Opérations liées à la programmation des films
 
 paths:
   /:
     get:
       tags:
-        - schedules
-      summary: home page of the service
+        - horaires
+      summary: page d'accueil du service
       operationId: home
-      description: Welcome page for the Schedule service
+      description: Page de bienvenue du service Horaires
       responses:
         '200':
-          description: welcome message
+          description: message de bienvenue
           content:
             text/html:
               schema:
@@ -37,13 +38,13 @@ paths:
   /schedule:
     get:
       tags:
-        - schedules
-      summary: get all schedules
+        - horaires
+      summary: obtenir tous les horaires
       operationId: get_all_schedules
-      description: Retrieve the complete schedule with all dates and movies
+      description: Récupère la programmation complète avec toutes les dates et films
       responses:
         '200':
-          description: list of all schedule entries
+          description: liste de toutes les entrées d'horaires
           content:
             application/json:
               schema:
@@ -53,12 +54,12 @@ paths:
     
     post:
       tags:
-        - schedules
-      summary: add a movie to the schedule
+        - horaires
+      summary: ajouter un film à la programmation
       operationId: add_movie_to_schedule
-      description: Add a new movie screening to the schedule
+      description: Ajoute une nouvelle projection de film à la programmation
       requestBody:
-        description: Schedule entry to add
+        description: Entrée d'horaire à ajouter
         required: true
         content:
           application/json:
@@ -66,7 +67,7 @@ paths:
               $ref: '#/components/schemas/ScheduleItem'
       responses:
         '201':
-          description: movie added to schedule
+          description: film ajouté à la programmation
           content:
             application/json:
               schema:
@@ -78,13 +79,13 @@ paths:
                   data:
                     $ref: '#/components/schemas/ScheduleItem'
         '400':
-          description: missing required fields
+          description: champs requis manquants
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '409':
-          description: movie already scheduled at this date/time
+          description: film déjà programmé à cette date/heure
           content:
             application/json:
               schema:
@@ -93,21 +94,21 @@ paths:
   /schedule/{date}:
     get:
       tags:
-        - schedules
-      summary: get schedule for a specific date
+        - horaires
+      summary: obtenir les horaires pour une date spécifique
       operationId: get_schedule_by_date
-      description: Retrieve all movies scheduled for a given date
+      description: Récupère tous les films programmés pour une date donnée
       parameters:
         - name: date
           in: path
           required: true
-          description: Date in format YYYYMMDD
+          description: Date au format AAAAMMJJ
           schema:
             type: string
             example: "20151130"
       responses:
         '200':
-          description: schedule for the date
+          description: horaires pour la date
           content:
             application/json:
               schema:
@@ -115,7 +116,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/ScheduleItem'
         '404':
-          description: no schedule found for this date
+          description: aucun horaire trouvé pour cette date
           content:
             application/json:
               schema:
@@ -124,21 +125,21 @@ paths:
   /schedule/movie/{movieid}:
     get:
       tags:
-        - schedules
-      summary: get all dates for a movie
+        - horaires
+      summary: obtenir toutes les dates pour un film
       operationId: get_schedule_by_movie
-      description: Retrieve all scheduled dates for a specific movie
+      description: Récupère toutes les dates programmées pour un film spécifique
       parameters:
         - name: movieid
           in: path
           required: true
-          description: Movie ID
+          description: ID du film
           schema:
             type: string
             example: 720d006c-3a57-4b6a-b18f-9b713b073f3c
       responses:
         '200':
-          description: schedule entries for the movie
+          description: entrées d'horaires pour le film
           content:
             application/json:
               schema:
@@ -146,7 +147,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/ScheduleItem'
         '404':
-          description: no schedule found for this movie
+          description: aucun horaire trouvé pour ce film
           content:
             application/json:
               schema:
@@ -155,28 +156,28 @@ paths:
   /schedule/{movieid}/{date}:
     get:
       tags:
-        - schedules
-      summary: check if movie is scheduled on a date
+        - horaires
+      summary: vérifier si un film est programmé à une date
       operationId: check_movie_schedule
-      description: Verify if a specific movie is available on a given date (used by Booking service)
+      description: Vérifie si un film spécifique est disponible à une date donnée (utilisé par le service Booking)
       parameters:
         - name: movieid
           in: path
           required: true
-          description: Movie ID
+          description: ID du film
           schema:
             type: string
             example: 720d006c-3a57-4b6a-b18f-9b713b073f3c
         - name: date
           in: path
           required: true
-          description: Date in format YYYYMMDD
+          description: Date au format AAAAMMJJ
           schema:
             type: string
             example: "20151130"
       responses:
         '200':
-          description: movie is scheduled on this date
+          description: le film est programmé à cette date
           content:
             application/json:
               schema:
@@ -192,7 +193,7 @@ paths:
                     type: boolean
                     example: true
         '404':
-          description: movie not scheduled on this date
+          description: film non programmé à cette date
           content:
             application/json:
               schema:
@@ -200,28 +201,28 @@ paths:
     
     delete:
       tags:
-        - schedules
-      summary: delete a specific schedule entry
+        - horaires
+      summary: supprimer une entrée d'horaire spécifique
       operationId: delete_schedule
-      description: Remove a movie from the schedule for a specific date
+      description: Supprime un film de la programmation pour une date spécifique
       parameters:
         - name: movieid
           in: path
           required: true
-          description: Movie ID
+          description: ID du film
           schema:
             type: string
             example: 720d006c-3a57-4b6a-b18f-9b713b073f3c
         - name: date
           in: path
           required: true
-          description: Date in format YYYYMMDD
+          description: Date au format AAAAMMJJ
           schema:
             type: string
             example: "20151130"
       responses:
         '200':
-          description: schedule entry deleted
+          description: entrée d'horaire supprimée
           content:
             application/json:
               schema:
@@ -231,7 +232,7 @@ paths:
                     type: string
                     example: Horaire supprimé avec succès
         '404':
-          description: schedule entry not found
+          description: entrée d'horaire non trouvée
           content:
             application/json:
               schema:
@@ -240,21 +241,21 @@ paths:
   /schedule/date/{date}:
     delete:
       tags:
-        - schedules
-      summary: delete all schedules for a date
+        - horaires
+      summary: supprimer tous les horaires pour une date
       operationId: delete_all_schedules_for_date
-      description: Remove all movies scheduled for a specific date
+      description: Supprime tous les films programmés pour une date spécifique
       parameters:
         - name: date
           in: path
           required: true
-          description: Date in format YYYYMMDD
+          description: Date au format AAAAMMJJ
           schema:
             type: string
             example: "20151130"
       responses:
         '200':
-          description: all schedules deleted for the date
+          description: tous les horaires supprimés pour la date
           content:
             application/json:
               schema:
@@ -264,7 +265,7 @@ paths:
                     type: string
                     example: Tous les horaires du 20151130 ont été supprimés
         '404':
-          description: no schedules found for this date
+          description: aucun horaire trouvé pour cette date
           content:
             application/json:
               schema:
@@ -281,13 +282,13 @@ components:
         date:
           type: string
           example: "20151130"
-          description: Date in format YYYYMMDD
+          description: Date au format AAAAMMJJ
         movies:
           type: array
           items:
             type: string
           example: ["720d006c-3a57-4b6a-b18f-9b713b073f3c", "a8034f44-aee4-44cf-b32c-74cf452aaaae"]
-          description: List of movie IDs playing on this date
+          description: Liste des ID de films diffusés à cette date
     
     Error:
       type: object
@@ -295,4 +296,3 @@ components:
         error:
           type: string
           example: Aucun horaire trouvé pour cette date
-

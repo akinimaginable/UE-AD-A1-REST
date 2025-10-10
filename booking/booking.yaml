@@ -1,35 +1,37 @@
 openapi: 3.1.1
 
 info:
-  title: Booking API
-  summary: This is the API of the Booking service
+  title: API Réservations
+  summary: API du service de gestion des réservations
   description: |
-    This API manages movie bookings for users. It provides endpoints to create, read and 
-    delete booking entries. The service integrates with Movie service to validate movie 
-    existence and with Schedule service to verify movie availability on requested dates.
-    It also uses User service to enforce admin-only access to global booking data.
+    Cette API gère les réservations de films pour les utilisateurs. Elle fournit des endpoints pour créer, 
+    lire et supprimer des entrées de réservation. Le service s'intègre avec le service Movie pour valider 
+    l'existence des films et avec le service Schedule pour vérifier la disponibilité des films aux dates 
+    demandées. Il utilise également le service User pour restreindre l'accès aux données globales de 
+    réservation aux administrateurs uniquement.
   contact:
-    name: Cinema Management System
+    name: Clovis SFEIR 
+    url: https://etrange.org/
     email: support@cinema.fr
   version: 1.0.0
 
 tags:
-  - name: bookings
-    description: Operations related to movie bookings
+  - name: réservations
+    description: Opérations liées aux réservations de films
   - name: admins
-    description: Admin-only secured calls
+    description: Appels sécurisés réservés aux administrateurs
 
 paths:
   /:
     get:
       tags:
-        - bookings
-      summary: home page of the service
+        - réservations
+      summary: page d'accueil du service
       operationId: home
-      description: Welcome page for the Booking service
+      description: Page de bienvenue du service Réservations
       responses:
         '200':
-          description: welcome message
+          description: message de bienvenue
           content:
             text/html:
               schema:
@@ -40,22 +42,22 @@ paths:
     get:
       tags:
         - admins
-      summary: get all bookings (admin only)
+      summary: obtenir toutes les réservations (admin uniquement)
       operationId: get_all_bookings
       description: |
-        Retrieve all bookings for all users. This endpoint requires admin privileges 
-        and verifies the user role via the User service.
+        Récupère toutes les réservations de tous les utilisateurs. Ce endpoint nécessite des privilèges 
+        administrateurs et vérifie le rôle de l'utilisateur via le service User.
       parameters:
         - name: userid
           in: query
           required: true
-          description: User ID of the requesting user (must be admin)
+          description: ID utilisateur de l'utilisateur demandeur (doit être administrateur)
           schema:
             type: string
             example: chris_rivers
       responses:
         '200':
-          description: list of all bookings
+          description: liste de toutes les réservations
           content:
             application/json:
               schema:
@@ -63,13 +65,13 @@ paths:
                 items:
                   $ref: '#/components/schemas/UserBookings'
         '400':
-          description: userid parameter missing
+          description: paramètre userid manquant
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '403':
-          description: access denied - admin rights required
+          description: accès refusé - droits administrateur requis
           content:
             application/json:
               schema:
@@ -77,14 +79,14 @@ paths:
     
     post:
       tags:
-        - bookings
-      summary: create a new booking
+        - réservations
+      summary: créer une nouvelle réservation
       operationId: create_booking
       description: |
-        Create a new movie booking for a user. This endpoint validates the movie existence 
-        via Movie service and checks the schedule via Schedule service.
+        Crée une nouvelle réservation de film pour un utilisateur. Ce endpoint valide l'existence 
+        du film via le service Movie et vérifie la programmation via le service Schedule.
       requestBody:
-        description: Booking information
+        description: Informations de réservation
         required: true
         content:
           application/json:
@@ -92,7 +94,7 @@ paths:
               $ref: '#/components/schemas/BookingRequest'
       responses:
         '201':
-          description: booking created successfully
+          description: réservation créée avec succès
           content:
             application/json:
               schema:
@@ -104,19 +106,19 @@ paths:
                   booking:
                     $ref: '#/components/schemas/BookingRequest'
         '400':
-          description: missing required fields
+          description: champs requis manquants
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: movie not found or not scheduled on this date
+          description: film non trouvé ou non programmé à cette date
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '409':
-          description: movie already booked for this date
+          description: film déjà réservé pour cette date
           content:
             application/json:
               schema:
@@ -125,27 +127,27 @@ paths:
   /bookings/{userid}:
     get:
       tags:
-        - bookings
-      summary: get bookings for a user
+        - réservations
+      summary: obtenir les réservations d'un utilisateur
       operationId: get_user_bookings
-      description: Retrieve all bookings for a specific user
+      description: Récupère toutes les réservations d'un utilisateur spécifique
       parameters:
         - name: userid
           in: path
           required: true
-          description: User ID
+          description: ID utilisateur
           schema:
             type: string
             example: chris_rivers
       responses:
         '200':
-          description: user bookings
+          description: réservations de l'utilisateur
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserBookings'
         '404':
-          description: no bookings found for this user
+          description: aucune réservation trouvée pour cet utilisateur
           content:
             application/json:
               schema:
@@ -153,21 +155,21 @@ paths:
     
     delete:
       tags:
-        - bookings
-      summary: delete all bookings for a user
+        - réservations
+      summary: supprimer toutes les réservations d'un utilisateur
       operationId: delete_all_user_bookings
-      description: Remove all bookings for a specific user
+      description: Supprime toutes les réservations d'un utilisateur spécifique
       parameters:
         - name: userid
           in: path
           required: true
-          description: User ID
+          description: ID utilisateur
           schema:
             type: string
             example: chris_rivers
       responses:
         '200':
-          description: all user bookings deleted
+          description: toutes les réservations de l'utilisateur supprimées
           content:
             application/json:
               schema:
@@ -177,7 +179,7 @@ paths:
                     type: string
                     example: Toutes les réservations de chris_rivers ont été supprimées
         '404':
-          description: no bookings found for this user
+          description: aucune réservation trouvée pour cet utilisateur
           content:
             application/json:
               schema:
@@ -186,30 +188,30 @@ paths:
   /bookings/{userid}/detailed:
     get:
       tags:
-        - bookings
-      summary: get detailed bookings for a user
+        - réservations
+      summary: obtenir les réservations détaillées d'un utilisateur
       operationId: get_detailed_user_bookings
       description: |
-        Retrieve bookings for a user enriched with complete movie information from Movie 
-        service and schedule information from Schedule service. This provides a comprehensive 
-        view combining data from three services.
+        Récupère les réservations d'un utilisateur enrichies avec les informations complètes des films 
+        provenant du service Movie et les informations de programmation du service Schedule. Ceci fournit 
+        une vue complète combinant les données de trois services.
       parameters:
         - name: userid
           in: path
           required: true
-          description: User ID
+          description: ID utilisateur
           schema:
             type: string
             example: chris_rivers
       responses:
         '200':
-          description: detailed user bookings
+          description: réservations détaillées de l'utilisateur
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DetailedBookings'
         '404':
-          description: no bookings found for this user
+          description: aucune réservation trouvée pour cet utilisateur
           content:
             application/json:
               schema:
@@ -218,35 +220,35 @@ paths:
   /bookings/{userid}/{movieid}/{date}:
     delete:
       tags:
-        - bookings
-      summary: delete a specific booking
+        - réservations
+      summary: supprimer une réservation spécifique
       operationId: delete_booking
-      description: Remove a specific movie booking for a user on a given date
+      description: Supprime une réservation de film spécifique pour un utilisateur à une date donnée
       parameters:
         - name: userid
           in: path
           required: true
-          description: User ID
+          description: ID utilisateur
           schema:
             type: string
             example: chris_rivers
         - name: movieid
           in: path
           required: true
-          description: Movie ID
+          description: ID du film
           schema:
             type: string
             example: 720d006c-3a57-4b6a-b18f-9b713b073f3c
         - name: date
           in: path
           required: true
-          description: Date in format YYYYMMDD
+          description: Date au format AAAAMMJJ
           schema:
             type: string
             example: "20151130"
       responses:
         '200':
-          description: booking deleted successfully
+          description: réservation supprimée avec succès
           content:
             application/json:
               schema:
@@ -256,7 +258,7 @@ paths:
                     type: string
                     example: Réservation supprimée avec succès
         '404':
-          description: booking not found
+          description: réservation non trouvée
           content:
             application/json:
               schema:
@@ -280,7 +282,7 @@ components:
         date:
           type: string
           example: "20151130"
-          description: Date in format YYYYMMDD
+          description: Date au format AAAAMMJJ
     
     UserBookings:
       type: object
@@ -370,4 +372,3 @@ components:
         error:
           type: string
           example: Aucune réservation trouvée pour cet utilisateur
-

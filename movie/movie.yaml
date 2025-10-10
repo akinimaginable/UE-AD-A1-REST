@@ -1,18 +1,18 @@
 openapi: 3.1.1
 
 info:
-  title: Movie API
-  summary: This is the API of the Movie service
+  title: API Films
+  summary: API du service de gestion des films
   description: |
-    This API manages the movie catalog for the cinema. It provides endpoints to create, 
-    read, update and delete movies. Admin operations (POST, PUT, DELETE) require 
-    authentication and are validated through the User service to verify admin privileges.
-    This service is used by the Booking service to validate movie existence and retrieve 
-    movie details for enriched booking information.
+    Cette API gère le catalogue de films du cinéma. Elle fournit des endpoints pour créer, 
+    lire, mettre à jour et supprimer des films. Les opérations d'administration (POST, PUT, DELETE) 
+    nécessitent une authentification et sont validées via le service User pour vérifier les 
+    privilèges administrateurs. Ce service est utilisé par le service Booking pour valider 
+    l'existence des films et récupérer les détails des films pour enrichir les informations de réservation.
   contact:
-    name: Helene Coullon
-    url: https://helene-coullon.fr/
-    email: helene.coullon@imt-atlantique.fr
+    name: Clovis SFEIR 
+    url: https://etrange.org/
+    email: clovis.sfeir@imt-atlantique.net
   license:
     name: GPL v3
     url: https://www.gnu.org/licenses/gpl-3.0.en.html
@@ -20,21 +20,21 @@ info:
 
 tags:
   - name: admins
-    description: Secured Admin-only calls
-  - name: developers
-    description: Operations available to regular developers
+    description: Appels sécurisés réservés aux administrateurs
+  - name: développeurs
+    description: Opérations disponibles pour les développeurs réguliers
 
 paths:
   /:
     get:
       tags:
-        - developers
-      summary: home page of the service
+        - développeurs
+      summary: page d'accueil du service
       operationId: home
-      description: Welcome page for the Movie service
+      description: Page de bienvenue du service Films
       responses:
         '200':
-          description: welcome message
+          description: message de bienvenue
           content:
             text/html:
               schema:
@@ -44,13 +44,13 @@ paths:
   /json:
     get:
       tags:
-        - developers
-      summary: get the full JSON database
+        - développeurs
+      summary: obtenir la base de données JSON complète
       operationId: get_json
-      description: Retrieve the complete movie catalog
+      description: Récupère le catalogue complet des films
       responses:
         '200':
-          description: full JSON database of movies
+          description: base de données JSON complète des films
           content:
             application/json:
               schema:
@@ -59,35 +59,35 @@ paths:
   /moviesbytitle:
     get:
       tags:
-        - developers
-      summary: get the movie by its title
+        - développeurs
+      summary: obtenir un film par son titre
       operationId: get_movie_bytitle
       description: |
-        By passing in the appropriate title, you can search for a specific movie 
-        in the catalog. The search is case-insensitive.
+        En fournissant le titre approprié, vous pouvez rechercher un film spécifique 
+        dans le catalogue. La recherche est insensible à la casse.
       parameters:
         - name: title
           in: query
-          description: Movie title to search for
+          description: Titre du film à rechercher
           required: true
           schema:
             type: string
             example: The Martian
       responses:
         '200':
-          description: Movie found
+          description: Film trouvé
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/MovieItem'
         '400':
-          description: title parameter missing
+          description: paramètre title manquant
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: movie title not found
+          description: titre de film non trouvé
           content:
             application/json:
               schema:
@@ -96,27 +96,27 @@ paths:
   /movies/{movieid}:
     get:
       tags:
-        - developers
-      summary: get the movie by its id
+        - développeurs
+      summary: obtenir un film par son ID
       operationId: get_movie_byid
-      description: By passing in the appropriate movie ID, you can get detailed information of a movie
+      description: En fournissant l'ID approprié, vous pouvez obtenir les informations détaillées d'un film
       parameters:
         - name: movieid
           in: path
-          description: Movie ID
+          description: ID du film
           required: true
           schema:
             type: string
             example: 39ab85e5-5e8e-4dc5-afea-65dc368bd7ab
       responses:
         '200':
-          description: Movie description
+          description: Description du film
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/MovieItem'
         '404':
-          description: movie ID not found
+          description: ID de film non trouvé
           content:
             application/json:
               schema:
@@ -125,21 +125,21 @@ paths:
     post:
       tags:
         - admins
-      summary: add a movie item
+      summary: ajouter un film
       operationId: create_movie
       description: |
-        Adds a movie to the system. Requires admin privileges verified through User service.
-        The 'author' field in the request body must contain a valid admin user ID.
+        Ajoute un film au système. Nécessite des privilèges administrateurs vérifiés via le service User.
+        Le champ 'author' dans le corps de la requête doit contenir un ID utilisateur administrateur valide.
       parameters:
         - name: movieid
           in: path
-          description: Movie ID
+          description: ID du film
           required: true
           schema:
             type: string
             example: 39ab85e5-5e8e-4dc5-afea-65dc368bd7ab
       requestBody:
-        description: Movie item to add with author field for authentication
+        description: Élément film à ajouter avec le champ author pour l'authentification
         required: true
         content:
           application/json:
@@ -147,7 +147,7 @@ paths:
               $ref: '#/components/schemas/MovieItemWithAuthor'
       responses:
         '201':
-          description: Movie created successfully
+          description: Film créé avec succès
           content:
             application/json:
               schema:
@@ -159,19 +159,19 @@ paths:
                   data:
                     $ref: '#/components/schemas/MovieItem'
         '400':
-          description: missing required JSON data
+          description: données JSON requises manquantes
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '403':
-          description: access denied - admin rights required
+          description: accès refusé - droits administrateur requis
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '409':
-          description: movie ID already exists
+          description: l'ID du film existe déjà
           content:
             application/json:
               schema:
@@ -180,21 +180,21 @@ paths:
     delete:
       tags:
         - admins
-      summary: delete a movie item
+      summary: supprimer un film
       operationId: del_movie
       description: |
-        Removes a movie from the catalog. Requires admin privileges verified through User service.
-        The request body must contain an 'author' field with a valid admin user ID.
+        Supprime un film du catalogue. Nécessite des privilèges administrateurs vérifiés via le service User.
+        Le corps de la requête doit contenir un champ 'author' avec un ID utilisateur administrateur valide.
       parameters:
         - name: movieid
           in: path
-          description: Movie ID
+          description: ID du film
           required: true
           schema:
             type: string
             example: 39ab85e5-5e8e-4dc5-afea-65dc368bd7ab
       requestBody:
-        description: Authentication data
+        description: Données d'authentification
         required: true
         content:
           application/json:
@@ -202,7 +202,7 @@ paths:
               $ref: '#/components/schemas/AuthorRequest'
       responses:
         '200':
-          description: Movie deleted successfully
+          description: Film supprimé avec succès
           content:
             application/json:
               schema:
@@ -214,19 +214,19 @@ paths:
                   data:
                     $ref: '#/components/schemas/MovieItem'
         '400':
-          description: missing required JSON data
+          description: données JSON requises manquantes
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '403':
-          description: access denied - admin rights required
+          description: accès refusé - droits administrateur requis
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: movie ID not found
+          description: ID de film non trouvé
           content:
             application/json:
               schema:
@@ -236,22 +236,22 @@ paths:
     put:
       tags:
         - admins
-      summary: update a movie rating
+      summary: mettre à jour la note d'un film
       operationId: update_movie_rating
       description: |
-        Update the rating of a movie. Requires admin privileges verified through User service.
-        The request body must contain an 'author' field with a valid admin user ID.
+        Met à jour la note d'un film. Nécessite des privilèges administrateurs vérifiés via le service User.
+        Le corps de la requête doit contenir un champ 'author' avec un ID utilisateur administrateur valide.
       parameters:
         - name: movieid
           in: path
-          description: Movie ID
+          description: ID du film
           required: true
           schema:
             type: string
             example: 39ab85e5-5e8e-4dc5-afea-65dc368bd7ab
         - name: rate
           in: path
-          description: New rating for the movie
+          description: Nouvelle note pour le film
           required: true
           schema:
             type: number
@@ -259,7 +259,7 @@ paths:
             maximum: 10
             example: 8.5
       requestBody:
-        description: Authentication data
+        description: Données d'authentification
         required: true
         content:
           application/json:
@@ -267,7 +267,7 @@ paths:
               $ref: '#/components/schemas/AuthorRequest'
       responses:
         '200':
-          description: Rating updated successfully
+          description: Note mise à jour avec succès
           content:
             application/json:
               schema:
@@ -279,19 +279,19 @@ paths:
                   data:
                     $ref: '#/components/schemas/MovieItem'
         '400':
-          description: missing required JSON data
+          description: données JSON requises manquantes
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '403':
-          description: access denied - admin rights required
+          description: accès refusé - droits administrateur requis
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: movie ID not found
+          description: ID de film non trouvé
           content:
             application/json:
               schema:
@@ -335,7 +335,7 @@ components:
             author:
               type: string
               example: chris_rivers
-              description: User ID of the admin making the request
+              description: ID utilisateur de l'administrateur effectuant la requête
     
     AuthorRequest:
       type: object
@@ -345,7 +345,7 @@ components:
         author:
           type: string
           example: chris_rivers
-          description: User ID of the admin making the request
+          description: ID utilisateur de l'administrateur effectuant la requête
     
     Error:
       type: object
