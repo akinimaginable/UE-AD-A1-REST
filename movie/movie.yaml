@@ -10,9 +10,7 @@ info:
     privilèges administrateurs. Ce service est utilisé par le service Booking pour valider 
     l'existence des films et récupérer les détails des films pour enrichir les informations de réservation.
   contact:
-    name: Clovis SFEIR 
-    url: https://etrange.org/
-    email: clovis.sfeir@imt-atlantique.net
+    name: Clovis SFEIR & Ema ALBISSON
   license:
     name: GPL v3
     url: https://www.gnu.org/licenses/gpl-3.0.en.html

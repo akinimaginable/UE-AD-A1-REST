@@ -9,9 +9,7 @@ info:
     pour vérifier les privilèges administrateurs. Ce service est utilisé par les autres 
     microservices pour vérifier les rôles et permissions des utilisateurs.
   contact:
-    name: Clovis SFEIR 
-    url: https://etrange.org/
-    email: clovis.sfeir@imt-atlantique.net
+    name: Clovis SFEIR & Ema ALBISSON
   version: 1.0.0
 
 tags:

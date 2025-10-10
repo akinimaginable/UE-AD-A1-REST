@@ -10,9 +10,7 @@ info:
     demandées. Il utilise également le service User pour restreindre l'accès aux données globales de 
     réservation aux administrateurs uniquement.
   contact:
-    name: Clovis SFEIR 
-    url: https://etrange.org/
-    email: support@cinema.fr
+    name: Clovis SFEIR & Ema ALBISSON
   version: 1.0.0
 
 tags:

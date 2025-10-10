@@ -9,9 +9,7 @@ info:
     de films diffusés à cette date. Ce service est utilisé par le service Booking pour valider 
     que les films sont disponibles aux dates demandées.
   contact:
-    name: Clovis SFEIR 
-    url: https://etrange.org/
-    email: clovis.sfeir@imt-atlantique.net
+    name: Clovis SFEIR & Ema ALBISSON
   version: 1.0.0
 
 tags:
