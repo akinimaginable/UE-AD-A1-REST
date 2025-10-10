@@ -1,0 +1,231 @@
+openapi: 3.1.1
+
+info:
+  title: User API
+  summary: This is the API of the User service
+  description: |
+    This API manages users and their authentication information. It provides endpoints 
+    to create, read, update and delete users, as well as check for admin privileges.
+    This service is used by other microservices to verify user roles and permissions.
+  contact:
+    name: Cinema Management System
+    email: support@cinema.fr
+  version: 1.0.0
+
+tags:
+  - name: users
+    description: Operations related to user management
+  - name: admins
+    description: Operations to retrieve admin users
+
+paths:
+  /:
+    get:
+      tags:
+        - users
+      summary: home page of the service
+      operationId: home
+      description: Welcome page for the User service
+      responses:
+        '200':
+          description: welcome message
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "<h1 style='color:blue'>Welcome to the User service!</h1>"
+
+  /users:
+    get:
+      tags:
+        - users
+      summary: get all users
+      operationId: get_all_users
+      description: Retrieve the complete list of users in the system
+      responses:
+        '200':
+          description: list of all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserItem'
+    
+    post:
+      tags:
+        - users
+      summary: create a new user
+      operationId: create_user
+      description: Add a new user to the system
+      requestBody:
+        description: User object to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserItem'
+      responses:
+        '201':
+          description: user created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserItem'
+        '400':
+          description: user ID already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/{userid}:
+    get:
+      tags:
+        - users
+      summary: get user by ID
+      operationId: get_user_by_id
+      description: Retrieve a specific user by their user ID
+      parameters:
+        - name: userid
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: string
+            example: chris_rivers
+      responses:
+        '200':
+          description: user found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserItem'
+        '404':
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
+    put:
+      tags:
+        - users
+      summary: update a user
+      operationId: update_user
+      description: Update an existing user's information
+      parameters:
+        - name: userid
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: string
+            example: chris_rivers
+      requestBody:
+        description: Updated user information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserItem'
+      responses:
+        '200':
+          description: user updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserItem'
+        '404':
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
+    delete:
+      tags:
+        - users
+      summary: delete a user
+      operationId: delete_user
+      description: Remove a user from the system
+      parameters:
+        - name: userid
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: string
+            example: chris_rivers
+      responses:
+        '200':
+          description: user deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User deleted successfully
+        '404':
+          description: user not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/admin:
+    get:
+      tags:
+        - admins
+      summary: get all admin users
+      operationId: get_admin_users
+      description: Retrieve the list of users with admin role
+      responses:
+        '200':
+          description: list of admin users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserItem'
+        '204':
+          description: no admin users found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    UserItem:
+      type: object
+      required:
+        - id
+        - name
+        - role
+      properties:
+        id:
+          type: string
+          example: chris_rivers
+        name:
+          type: string
+          example: Chris Rivers
+        role:
+          type: string
+          enum: [admin, user]
+          example: admin
+        last_active:
+          type: integer
+          example: 1360031010
+          description: Unix timestamp of last activity
+    
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: User ID not found
+

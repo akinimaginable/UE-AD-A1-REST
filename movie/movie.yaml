@@ -1,8 +1,14 @@
 openapi: 3.1.1
+
 info:
   title: Movie API
   summary: This is the API of the Movie service
-  description: a looongggggg description
+  description: |
+    This API manages the movie catalog for the cinema. It provides endpoints to create, 
+    read, update and delete movies. Admin operations (POST, PUT, DELETE) require 
+    authentication and are validated through the User service to verify admin privileges.
+    This service is used by the Booking service to validate movie existence and retrieve 
+    movie details for enriched booking information.
   contact:
     name: Helene Coullon
     url: https://helene-coullon.fr/
@@ -11,186 +17,293 @@ info:
     name: GPL v3
     url: https://www.gnu.org/licenses/gpl-3.0.en.html
   version: 1.0.0
+
 tags:
-- name: admins
-  description: Secured Admin-only calls
-- name: developers
-  description: Operations available to regular developers
+  - name: admins
+    description: Secured Admin-only calls
+  - name: developers
+    description: Operations available to regular developers
+
 paths:
   /:
     get:
       tags:
-      - developers
+        - developers
       summary: home page of the service
-      description: |
-        Nothing to do
       operationId: home
+      description: Welcome page for the Movie service
       responses:
-        "200":
+        '200':
           description: welcome message
           content:
             text/html:
               schema:
                 type: string
-                example: <h1 style='color:blue'>Welcome to the Movie service!</h1>
+                example: "<h1 style='color:blue'>Bienvenue dans le service Films!</h1>"
+
   /json:
     get:
       tags:
-      - developers
+        - developers
       summary: get the full JSON database
-      description: |
-        Nothing to do
       operationId: get_json
+      description: Retrieve the complete movie catalog
       responses:
-        "200":
-          description: full JSON
+        '200':
+          description: full JSON database of movies
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllMovies'
+
+  /moviesbytitle:
+    get:
+      tags:
+        - developers
+      summary: get the movie by its title
+      operationId: get_movie_bytitle
+      description: |
+        By passing in the appropriate title, you can search for a specific movie 
+        in the catalog. The search is case-insensitive.
+      parameters:
+        - name: title
+          in: query
+          description: Movie title to search for
+          required: true
+          schema:
+            type: string
+            example: The Martian
+      responses:
+        '200':
+          description: Movie found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieItem'
+        '400':
+          description: title parameter missing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: movie title not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /movies/{movieid}:
     get:
       tags:
-      - developers
+        - developers
       summary: get the movie by its id
-      description: By passing in the appropriate options, you can get info of a Movie
       operationId: get_movie_byid
+      description: By passing in the appropriate movie ID, you can get detailed information of a movie
       parameters:
-      - name: movieid
-        in: path
-        description: Movie ID.
-        required: true
-        schema:
-          type: string
+        - name: movieid
+          in: path
+          description: Movie ID
+          required: true
+          schema:
+            type: string
+            example: 39ab85e5-5e8e-4dc5-afea-65dc368bd7ab
       responses:
-        "200":
+        '200':
           description: Movie description
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/MovieItem'
-        "400":
-          description: bad input parameter
+        '404':
+          description: movie ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
     post:
       tags:
-      - admins
+        - admins
       summary: add a movie item
-      description: Adds a movie to the system
       operationId: create_movie
+      description: |
+        Adds a movie to the system. Requires admin privileges verified through User service.
+        The 'author' field in the request body must contain a valid admin user ID.
       parameters:
-      - name: movieid
-        in: path
-        description: Movie ID.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - name: movieid
+          in: path
+          description: Movie ID
+          required: true
+          schema:
+            type: string
+            example: 39ab85e5-5e8e-4dc5-afea-65dc368bd7ab
       requestBody:
-        description: Inventory item to add
+        description: Movie item to add with author field for authentication
+        required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MovieItem'
+              $ref: '#/components/schemas/MovieItemWithAuthor'
       responses:
-        "200":
-          description: Movie created
+        '201':
+          description: Movie created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MovieItem'
-        "409":
-          description: an existing item already exists
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Film ajouté avec succès
+                  data:
+                    $ref: '#/components/schemas/MovieItem'
+        '400':
+          description: missing required JSON data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: access denied - admin rights required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: movie ID already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    
     delete:
       tags:
-      - admins
+        - admins
       summary: delete a movie item
-      description: Adds a movie to the system
       operationId: del_movie
-      parameters:
-      - name: movieid
-        in: path
-        description: Movie ID.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      responses:
-        "200":
-          description: item deleted
-        "400":
-          description: ID not found
-  /moviesbytitle:
-    get:
-      tags:
-      - developers
-      summary: get the movie by its title
       description: |
-        By passing in the appropriate options, you can get Movie info
-      operationId: get_movie_bytitle
+        Removes a movie from the catalog. Requires admin privileges verified through User service.
+        The request body must contain an 'author' field with a valid admin user ID.
       parameters:
-      - name: title
-        in: query
-        description: pass a title
+        - name: movieid
+          in: path
+          description: Movie ID
+          required: true
+          schema:
+            type: string
+            example: 39ab85e5-5e8e-4dc5-afea-65dc368bd7ab
+      requestBody:
+        description: Authentication data
         required: true
-        style: form
-        explode: true
-        schema:
-          type: string
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorRequest'
       responses:
-        "200":
-          description: Movie item
+        '200':
+          description: Movie deleted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MovieItem'
-        "400":
-          description: bad input parameter
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Film supprimé avec succès
+                  data:
+                    $ref: '#/components/schemas/MovieItem'
+        '400':
+          description: missing required JSON data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: access denied - admin rights required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: movie ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /movies/{movieid}/{rate}:
     put:
       tags:
-      - admins
-      summary: update a movie rate
-      description: update the rating of a movie
+        - admins
+      summary: update a movie rating
       operationId: update_movie_rating
+      description: |
+        Update the rating of a movie. Requires admin privileges verified through User service.
+        The request body must contain an 'author' field with a valid admin user ID.
       parameters:
-      - name: movieid
-        in: path
-        description: Movie ID.
+        - name: movieid
+          in: path
+          description: Movie ID
+          required: true
+          schema:
+            type: string
+            example: 39ab85e5-5e8e-4dc5-afea-65dc368bd7ab
+        - name: rate
+          in: path
+          description: New rating for the movie
+          required: true
+          schema:
+            type: number
+            minimum: 0
+            maximum: 10
+            example: 8.5
+      requestBody:
+        description: Authentication data
         required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: rate
-        in: path
-        description: Movie rating.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          maximum: 10
-          minimum: 0
-          type: integer
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorRequest'
       responses:
-        "200":
-          description: rate updated
-        "400":
+        '200':
+          description: Rating updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Note mise à jour avec succès
+                  data:
+                    $ref: '#/components/schemas/MovieItem'
+        '400':
+          description: missing required JSON data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: access denied - admin rights required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
           description: movie ID not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 components:
   schemas:
     AllMovies:
-      type: object
-      required:
-        - movies
-      properties:
-        movies:
-          type: array
-          items:
-            type: object
-            properties:
-              $ref: '#/components/schemas/MovieItem'
+      type: array
+      items:
+        $ref: '#/components/schemas/MovieItem'
+    
     MovieItem:
       type: object
       required:
@@ -203,13 +316,40 @@ components:
           type: string
           example: The Martian
         rating:
-          type: integer
-          example: 7
+          type: number
+          example: 7.0
         director:
           type: string
-          example: Paul McGuigan
+          example: Ridley Scott
         id:
           type: string
           example: 39ab85e5-5e8e-4dc5-afea-65dc368bd7ab
-
-
+    
+    MovieItemWithAuthor:
+      allOf:
+        - $ref: '#/components/schemas/MovieItem'
+        - type: object
+          required:
+            - author
+          properties:
+            author:
+              type: string
+              example: chris_rivers
+              description: User ID of the admin making the request
+    
+    AuthorRequest:
+      type: object
+      required:
+        - author
+      properties:
+        author:
+          type: string
+          example: chris_rivers
+          description: User ID of the admin making the request
+    
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Film ID non trouvé
