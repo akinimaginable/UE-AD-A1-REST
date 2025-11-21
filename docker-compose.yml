@@ -1,25 +1,89 @@
 services:
-  booking:
-    build:
-      context: .
-      dockerfile: booking/Dockerfile
+  db:
+    image: mongo:8.0.15-noble
+    restart: always
     ports:
-      - "3100:3100"
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "*65%8XPuGaQ#"
+    volumes:
+      - mongo_data:/data/db
+
+  mongo-express:
+    image: mongo-express:latest
+    restart: always
+    ports:
+      - "8082:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: "root"
+      ME_CONFIG_MONGODB_ADMINPASSWORD: "*65%8XPuGaQ#"
+      ME_CONFIG_MONGODB_URL: "mongodb://root:%2A65%258XPuGaQ%23@db:27017/"
+    depends_on:
+      - db
+
   movie:
     build:
       context: .
       dockerfile: movie/Dockerfile
     ports:
-      - "3200:3200"
+      - "4200:3200"
+    depends_on:
+      - db
+    environment:
+      MONGO_URL: "mongodb://root:%2A65%258XPuGaQ%23@db:27017/"
+      PERSISTENCE_TYPE: "MONGODB"
+      USER_SERVICE_URL: "http://user:3203"
+    volumes:
+      - ./movie/databases:/app/databases
+
   schedule:
     build:
       context: .
       dockerfile: schedule/Dockerfile
     ports:
-      - "3300:3300"
+      - "4202:3202"
+    depends_on:
+      - db
+    environment:
+      MONGO_URL: "mongodb://root:%2A65%258XPuGaQ%23@db:27017/"
+      PERSISTENCE_TYPE: "MONGODB"
+    volumes:
+      - ./schedule/databases:/app/databases
+
   user:
     build:
       context: .
       dockerfile: user/Dockerfile
     ports:
-      - "3400:3400"
+      - "4203:3203"
+    depends_on:
+      - db
+    environment:
+      MONGO_URL: "mongodb://root:%2A65%258XPuGaQ%23@db:27017/"
+      PERSISTENCE_TYPE: "MONGODB"
+    volumes:
+      - ./user/databases:/app/databases
+
+  booking:
+    build:
+      context: .
+      dockerfile: booking/Dockerfile
+    ports:
+      - "4201:3201"
+    depends_on:
+      - db
+      - movie
+      - schedule
+      - user
+    environment:
+      MONGO_URL: "mongodb://root:%2A65%258XPuGaQ%23@db:27017/"
+      PERSISTENCE_TYPE: "MONGODB"
+      MOVIE_SERVICE_URL: "http://movie:3200"
+      SCHEDULE_SERVICE_URL: "http://schedule:3202"
+      USER_SERVICE_URL: "http://user:3203"
+    volumes:
+      - ./booking/databases:/app/databases
+
+volumes:
+  mongo_data:

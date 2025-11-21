@@ -659,7 +659,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "http://localhost:3200",
+			"value": "http://localhost:4200",
 			"type": "string"
 		},
 		{
@@ -694,7 +694,7 @@
 		},
 		{
 			"key": "schedule_base_url",
-			"value": "http://localhost:3202",
+			"value": "http://localhost:4202",
 			"type": "string"
 		},
 		{
@@ -709,7 +709,7 @@
 		},
 		{
 			"key": "booking_base_url",
-			"value": "http://localhost:3201",
+			"value": "http://localhost:4201",
 			"type": "string"
 		},
 		{
@@ -729,7 +729,7 @@
 		},
 		{
 			"key": "user_service_base_url",
-			"value": "http://localhost:3203",
+			"value": "http://localhost:4203",
 			"type": "string"
 		}
 	]
